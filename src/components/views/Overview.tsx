@@ -14,7 +14,7 @@ import {
 } from '@/lib/data';
 import TrafficChart from '../charts/TrafficChart';
 import TopAvenuesChart from '../charts/TopAvenuesChart';
-import AccidentHeatmap from '../charts/AccidentHeatmap';
+import MapWrapper from '../charts/MapWrapper';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { FiActivity, FiAlertTriangle, FiClock, FiMapPin } from 'react-icons/fi';
 
@@ -116,13 +116,15 @@ export default function Overview() {
         </Card>
       </div>
 
-      <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+      <Card className="bg-card/50 backdrop-blur-sm border-border/50 h-[500px] flex flex-col">
         <CardHeader>
           <CardTitle>Mapa de Calor de Riesgo Vial</CardTitle>
           <CardDescription>Concentración de accidentes por zona en tiempo real.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <AccidentHeatmap data={accidentData} />
+        <CardContent className="flex-1 p-0 relative">
+          <div className="absolute inset-0 rounded-b-xl overflow-hidden">
+            <MapWrapper data={accidentData} />
+          </div>
         </CardContent>
       </Card>
     </div>

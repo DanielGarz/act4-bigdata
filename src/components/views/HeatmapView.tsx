@@ -2,17 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { generateAccidentZones, AccidentZone } from '@/lib/data';
-import AccidentHeatmap from '../charts/AccidentHeatmap';
 import MapWrapper from '../charts/MapWrapper';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function HeatmapView() {
   const [accidentData, setAccidentData] = useState<AccidentZone[]>([]);
 
   useEffect(() => {
     const loadData = () => {
-      // Now generateAccidentZones returns a full list, no need to manually append
       const baseData = generateAccidentZones();
       setAccidentData(baseData);
     };
@@ -27,36 +24,21 @@ export default function HeatmapView() {
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-foreground">Mapa de Calor de Riesgo</h2>
         <p className="text-muted-foreground mt-1">
-          Visualización detallada de las zonas con mayor incidencia de accidentes viales.
+          Visualización geoespacial detallada de las zonas con mayor incidencia de accidentes viales.
         </p>
       </div>
 
-      <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+      <Card className="bg-card/50 backdrop-blur-sm border-border/50 h-[600px] flex flex-col">
         <CardHeader>
-          <CardTitle>Análisis de Riesgo por Zona</CardTitle>
+          <CardTitle>Análisis Geoespacial de Riesgo</CardTitle>
           <CardDescription>
-            Visualiza los puntos críticos en el mapa interactivo o como cuadrícula de riesgo.
+            Monitoreo en tiempo real de puntos críticos en el Área Metropolitana de Monterrey.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="map" className="w-full">
-            <div className="flex justify-end mb-4">
-              <TabsList className="bg-secondary/50">
-                <TabsTrigger value="map">Mapa Interactivo</TabsTrigger>
-                <TabsTrigger value="grid">Vista Cuadrícula</TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="map" className="mt-0">
-              <MapWrapper data={accidentData} />
-            </TabsContent>
-
-            <TabsContent value="grid" className="mt-0">
-              <div className="min-h-[500px]">
-                <AccidentHeatmap data={accidentData} />
-              </div>
-            </TabsContent>
-          </Tabs>
+        <CardContent className="flex-1 p-0 relative">
+          <div className="absolute inset-0 rounded-b-xl overflow-hidden">
+            <MapWrapper data={accidentData} />
+          </div>
         </CardContent>
       </Card>
 
