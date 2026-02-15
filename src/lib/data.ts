@@ -16,6 +16,8 @@ export interface AccidentZone {
   zone: string;
   accidents: number;
   riskLevel: 'Bajo' | 'Medio' | 'Alto' | 'Crítico';
+  lat: number;
+  lng: number;
 }
 
 export interface KPIData {
@@ -73,27 +75,73 @@ export const generateTopAvenues = (): AvenueData[] => {
 // Generar zonas de accidentes
 export const generateAccidentZones = (): AccidentZone[] => {
   const zones = [
-    { zone: "Centro", base: 15 },
-    { zone: "San Jerónimo", base: 8 },
-    { zone: "Cumbres", base: 10 },
-    { zone: "Tecnológico", base: 5 },
-    { zone: "Valle Oriente", base: 7 },
-    { zone: "Guadalupe Centro", base: 12 },
-    { zone: "San Nicolás", base: 9 },
-    { zone: "Apodaca", base: 11 }
+    // Monterrey Centro y Alrededores
+    { zone: "Centro", base: 18, lat: 25.6714, lng: -100.3086 },
+    { zone: "Obispado", base: 12, lat: 25.6738, lng: -100.3400 },
+    { zone: "Mitras Centro", base: 10, lat: 25.6920, lng: -100.3450 },
+    { zone: "Col. Moderna", base: 8, lat: 25.6880, lng: -100.2950 },
+    { zone: "Satélite", base: 9, lat: 25.6150, lng: -100.2750 },
+
+    // Poniente
+    { zone: "San Jerónimo", base: 8, lat: 25.6744, lng: -100.3547 },
+    { zone: "Cumbres 1er Sec", base: 14, lat: 25.7050, lng: -100.3650 },
+    { zone: "Cumbres Elite", base: 11, lat: 25.7283, lng: -100.3950 },
+    { zone: "Vista Hermosa", base: 7, lat: 25.6850, lng: -100.3550 },
+
+    // Sur / Carretera Nacional
+    { zone: "Tecnológico", base: 6, lat: 25.6517, lng: -100.2933 },
+    { zone: "Contry", base: 9, lat: 25.6350, lng: -100.2800 },
+    { zone: "Estanzuela", base: 13, lat: 25.5650, lng: -100.2500 },
+    { zone: "La Rioja", base: 7, lat: 25.5500, lng: -100.2350 },
+
+    // San Pedro
+    { zone: "Valle Oriente", base: 7, lat: 25.6422, lng: -100.3333 },
+    { zone: "Casco Urbano", base: 5, lat: 25.6567, lng: -100.4017 },
+    { zone: "San Agustín", base: 12, lat: 25.6480, lng: -100.3500 },
+    { zone: "Chipinque", base: 4, lat: 25.6200, lng: -100.3650 },
+
+    // Guadalupe
+    { zone: "Guadalupe Centro", base: 12, lat: 25.6775, lng: -100.2600 },
+    { zone: "Expo Gpe", base: 15, lat: 25.6700, lng: -100.2450 },
+    { zone: "Linda Vista", base: 11, lat: 25.6950, lng: -100.2650 },
+    { zone: "Estadio BBVA", base: 8, lat: 25.6800, lng: -100.2350 },
+
+    // San Nicolás
+    { zone: "San Nicolás Centro", base: 9, lat: 25.7558, lng: -100.2869 },
+    { zone: "Anáhuac", base: 7, lat: 25.7350, lng: -100.3100 },
+    { zone: "Las Puentes", base: 10, lat: 25.7450, lng: -100.2650 },
+    { zone: "Universidad", base: 14, lat: 25.7250, lng: -100.3050 },
+
+    // Apodaca y Escobedo
+    { zone: "Apodaca Centro", base: 11, lat: 25.7817, lng: -100.1886 },
+    { zone: "Huinalá", base: 16, lat: 25.7600, lng: -100.1500 },
+    { zone: "Escobedo Centro", base: 13, lat: 25.7933, lng: -100.3083 },
+    { zone: "Sendero", base: 15, lat: 25.7700, lng: -100.2900 },
+
+    // Santa Catarina
+    { zone: "Santa Catarina", base: 10, lat: 25.6767, lng: -100.4617 },
+    { zone: "La Fama", base: 12, lat: 25.6700, lng: -100.4300 },
+    { zone: "Puerta del Sol", base: 9, lat: 25.6900, lng: -100.4500 },
+
+    // Juárez
+    { zone: "Juárez Centro", base: 17, lat: 25.6483, lng: -100.0967 },
+    { zone: "Vistas del Río", base: 14, lat: 25.6300, lng: -100.1200 }
   ];
 
   return zones.map(z => {
-    const accidents = Math.floor(z.base + Math.random() * 5);
+    // Variación aleatoria de +/- 3 accidentes
+    const accidents = Math.max(2, Math.floor(z.base + Math.random() * 6 - 3));
     let riskLevel: AccidentZone['riskLevel'] = 'Bajo';
-    if (accidents > 15) riskLevel = 'Crítico';
-    else if (accidents > 10) riskLevel = 'Alto';
-    else if (accidents > 5) riskLevel = 'Medio';
+    if (accidents >= 15) riskLevel = 'Crítico';
+    else if (accidents >= 10) riskLevel = 'Alto';
+    else if (accidents >= 6) riskLevel = 'Medio';
 
     return {
       zone: z.zone,
       accidents,
-      riskLevel
+      riskLevel,
+      lat: z.lat,
+      lng: z.lng
     };
   }).sort((a, b) => b.accidents - a.accidents);
 };
@@ -107,6 +155,6 @@ export const calculateKPIs = (zones: AccidentZone[], avenues: AvenueData[]): KPI
     totalAccidents,
     avgSpeed,
     mostDangerousZone,
-    activeAlerts: Math.floor(Math.random() * 5)
+    activeAlerts: zones.filter(z => z.riskLevel === 'Crítico').length
   };
 };

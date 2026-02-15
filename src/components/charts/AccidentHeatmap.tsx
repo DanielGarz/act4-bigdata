@@ -21,7 +21,7 @@ export default function AccidentHeatmap({ data }: AccidentHeatmapProps) {
   };
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-[300px]">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
       {data.map((zone, index) => (
         <motion.div
           key={zone.zone}
@@ -30,7 +30,7 @@ export default function AccidentHeatmap({ data }: AccidentHeatmapProps) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, delay: index * 0.05 }}
           className={clsx(
-            "relative rounded-xl p-4 flex flex-col justify-between overflow-hidden cursor-pointer transition-colors",
+            "relative rounded-xl p-4 flex flex-col justify-between overflow-hidden cursor-pointer transition-colors min-h-[120px]",
             getIntensityColor(zone.accidents)
           )}
         >
